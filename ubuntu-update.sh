@@ -5,3 +5,6 @@ if ! [$(id -u) = 0]; then
     sudo apt update
     exit 1
 fi
+
+# list upgradable command-line.
+# sudo apt list --upgradable
