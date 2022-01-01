@@ -2,25 +2,41 @@
 # set up the image and container name.
 imageName="docker/image2"
 containerName="shopping2"
+port="8080"
 
-# remove image and container.
-echo "Removing image and container..."
-docker stop $containerName
-docker rm $containerName
-docker rmi $imageName
+task() {
+    # complie your spring-boot project to jar file.
+    echo "complie the spring-boot project."
+    ./mvnw clean package
 
-# complie your spring-boot project to jar file.
-echo "complie the spring-boot project."
-./mvnw clean package
+    # build the image.
+    echo "build the image."
+    docker build -t $imageName .
 
-# build the image.
-echo "build the image."
-docker build -t docker/image2 .
+    # run the container by docker image.
+    echo "build the container by docker image."
+    docker run -d --name $containerName -p $port:$port $imageName
 
-# run the container by docker image.
-echo "build the container by docker image."
-docker run -d --name shopping2 -p 8080:8080 docker/image2
+    # start your docker service.
+    echo "start the container."
+    docker start $containerName
+}
 
-# start your docker service.
-echo "start the container."
-docker start shopping2
+main() {
+    if [[ $(docker ps -f name=$containerName) != "" ]]; then
+        # remove container.
+        echo "Removing container..."
+        docker stop $containerName
+        docker rm $containerName
+    fi
+
+    if [[ $(docker images -q $imageName) != "" ]]; then
+        # remove image.
+        echo "Removing image..."
+        docker rmi $imageName
+    fi
+
+    task
+}
+
+main
