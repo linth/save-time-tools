@@ -1,8 +1,32 @@
 #!bin/bash
+# Reference:
+# - https://spring.io/guides/topicals/spring-boot-docker/
+
 # set up the image and container name.
-imageName="docker/image2"
-containerName="shopping2"
-port="8080"
+imageName=$1
+containerName=$2
+port=$3
+
+if [[ $imageName != "" ]]; then
+    echo "image name has already been set."
+else
+    # set up the image name.
+    imageName="docker/image2"
+fi
+
+if [[ $containerName != "" ]]; then
+    echo "container name has already been set."
+else
+    # set up the container name.
+    containerName="shopping2"
+fi
+
+if [[ $port != "" ]]; then
+    echo "port has already been set."
+else
+    # set up the port.
+    port="8080"
+fi
 
 task() {
     # complie your spring-boot project to jar file.
